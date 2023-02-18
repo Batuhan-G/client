@@ -1,55 +1,69 @@
 import React from 'react'
 import './Cart.scss'
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
+import { useSelector, useDispatch } from "react-redux"
+import { removeItem, resetCart } from '../../redux/cartReducer';
+import { loadStripe } from '@stripe/stripe-js';
+import { makeRequest } from "../../makeRequest";
 
 const Cart = () => {
 
-const data = [
-    {
-        id: 1,
-        img: "https://picsum.photos/id/237/200/300",
-        img2: "https://picsum.photos/id/236/200/300",
-        title: "Title1",
-        desc: "It is a diibution of letters diibution of lette",
-        isNew: true,
-        oldPrice: 19,
-        price: 12,
-    },
-    {
-        id: 2,
-        img: "https://picsum.photos/id/235/200/300",
-        img2: "https://picsum.photos/id/234/200/300",
-        title: "Title2",
-        desc: "It ractdistribution of letters",
-        isNew: true,
-        oldPrice: 19,
-        price: 12,
-    },
-]
+    const dispatch = useDispatch()
+    const products = useSelector(state => state.cart.products)
 
-  return (
-    <div className='cart'>
-        <h1>Products in your cart</h1>
-        {data.map(item =>(
-            <div className="item" key={item.id}>
-        
-                <img src={item.img} alt="" />
-                <div className="details">
-                    <h1>{item.title}</h1>
-                    <p>{item.desc?.substring(0,30)}</p>
-                    <div className="price">1 x ${item.price}</div>
+    const totalPrice = () => {
+        let total = 0
+        products.forEach((item) => (total += item.quantity * item.price))
+        return total.toFixed(2)
+    }
+
+    const stripePromise = loadStripe(
+        "pk_test_51Mb3d5CU2yX8dDauVHLHCM0MEjKQiImnBIniRB6bV4qWvbVpxu1AoicgTQRgL96a9a2erIEWVmaF5Pxw1XhIOaMK00HI5j6gxW"
+    );
+
+
+    const handlePayment = async () => {
+        try {
+            const stripe =await stripePromise
+
+            const res = await makeRequest.post("/orders", {
+                products,
+            })
+
+            await stripe.redirectToCheckout({
+                sessionId:res.data.stripeSession.id,
+            })
+
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    return (
+        <div className='cart'>
+            <h1>Products in your cart</h1>
+            {products?.map(item => (
+                <div className="item" key={item.id}>
+
+                    <img src={process.env.REACT_APP_UPLOAD_URL + item.img} alt="" />
+                    <div className="details">
+                        <h1>{item.title}</h1>
+                        <p>{item.desc?.substring(0, 30)}</p>
+                        <div className="price">{item.quantity} x ${item.price}</div>
+                    </div>
+                    <DeleteOutlinedIcon className='delete' onClick={() => dispatch(removeItem(item.id))} />
                 </div>
-                <DeleteOutlinedIcon className='delete'/>
+            ))}
+            <div className="total">
+                <span>SUBTOTAL</span>
+                <span>${totalPrice()}</span>
             </div>
-        ))}
-        <div className="total">
-            <span>SUBTOTAL</span>
-            <span>$123</span>
+            <button onClick={handlePayment}>PROCEED TO CHECKOUT</button>
+            <span className='reset' onClick={() => dispatch(resetCart())}>
+                Reset Cart
+            </span>
         </div>
-        <button>PROCEED TO CHECKOUT</button>
-        <span className='reset'>Reset Cart</span>
-    </div>
-  )
+    )
 }
 
 export default Cart
