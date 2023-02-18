@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import "./Footer.scss"
 
 const Footer = () => {
@@ -8,7 +9,10 @@ const Footer = () => {
 
         <div className="item">
           <h1>Categories</h1>
+          <Link className="link" to="/products/1">
           <span>Women</span>
+            </Link>
+          
           <span>Men</span>
           <span>Shoes</span>
           <span>Accessories</span>
@@ -46,7 +50,7 @@ const Footer = () => {
       </div>
       <div className="bottom">
         <div className="left">
-          <span className="logo">Lamastore</span>
+          <span className="logo">Gorenstore</span>
           <span className="copyright">
             © Copyright 2023. All Rights Reserved
           </span>

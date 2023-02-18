@@ -20,6 +20,7 @@ const Product = () => {
   const { data, loading, error } = useFetch(
     `/products/${id}?populate=*`
   )
+  console.log(data);
 
   return (
     <div className='product'>
@@ -73,9 +74,8 @@ const Product = () => {
               </div>
             </div>
             <div className="info">
-              <span>Vendor: Polo</span>
-              <span>Product Type: T-Shirt</span>
-              <span>Tag: T-Shirt, Women, Top</span>
+              <span>Product Type: {data?.attributes?.sub_categories?.data[0]?.attributes?.title}</span>
+              <span>Tag: {data?.attributes?.categories?.data[0]?.attributes?.title}</span>
             </div>
             <hr />
             <div className="info">

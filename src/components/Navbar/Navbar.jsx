@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import SearchIcon from '@mui/icons-material/Search'
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined'
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined'
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined'
-import { useSelector, useDispatch} from "react-redux"
+import { useSelector } from "react-redux"
 import { Link } from 'react-router-dom'
 import "./Navbar.scss"
 import Cart from '../Cart/Cart'
@@ -20,14 +19,6 @@ const Navbar = () => {
       <div className="wrapper">
         <div className="left">
           <div className="item">
-            <img src="img/en.png" alt="" />
-            <KeyboardArrowDownIcon />
-          </div>
-          <div className="item">
-            <span>USD</span>
-            <KeyboardArrowDownIcon />
-          </div>
-          <div className="item">
             <Link className="link" to="/products/1">Women</Link>
           </div>
           <div className="item">
@@ -38,7 +29,7 @@ const Navbar = () => {
           </div>
         </div>
         <div className="center">
-          <Link className="link" to="/">LAMASTORE</Link>
+          <Link className="link" to="/">GORENSTORE</Link>
         </div>
         <div className="right">
           <div className="item">
